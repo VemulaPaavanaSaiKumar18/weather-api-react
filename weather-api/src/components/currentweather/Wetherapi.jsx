@@ -205,7 +205,11 @@ export default function Wetherapi() {
               border: "2px solid black",
             }}
           >
-            <Typography sx={{ marginTop: "18px" }}>{data.date}</Typography>
+            <Typography
+              sx={{ marginTop: "18px", color: "brown", fontSize: "30px" }}
+            >
+              {data.date}
+            </Typography>
             <Typography sx={{ marginTop: "18px" }}>
               Temp:{data.temp}°C
             </Typography>
