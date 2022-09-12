@@ -7,16 +7,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import PlaceIcon from "@mui/icons-material/Place";
+import { useState, useEffect } from "react";
 import { Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 export default function Wetherapi() {
-  const [open, setOpen] = React.useState(true);
-  const [item, setitem] = React.useState(0);
-  const [place, setplace] = React.useState("");
+  const [open, setOpen] = useState(true);
+  const [item, setitem] = useState(0);
+  const [place, setplace] = useState("");
+  const [calendar, setcalendar] = useState([]);
 
   const locations = [
-    { APIkey: "ea6e72aba7d75fbbf6be2aedc208af98" },
+    { APIkey1: "ea6e72aba7d75fbbf6be2aedc208af98" },
+    { APIkey2: "b1b15e88fa797225412429c1c50c122a1" },
     { Placename: "Uthukottai", lat: 13.3339, lon: 79.8927 },
     { Placename: "Tiruvallur", lat: 13.1231, lon: 79.912 },
     { Placename: "Chennai", lat: 13.0827, lon: 80.2707 },
@@ -28,43 +31,66 @@ export default function Wetherapi() {
 
   const data = async (lat, lon) => {
     let res = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${locations[0].APIkey}`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${locations[0].APIkey1}`
     );
     let kelvin = res.data.main.temp;
     let celsius = Math.round(kelvin - 273.15);
     setitem(celsius);
   };
-
+  const calender = async (lat, lon) => {
+    let res = await axios.get(
+      `https://pro.openweathermap.org/data/2.5/forecast/climate?lat=${lat}&lon=${lon}&appid=${locations[1].APIkey2}`
+    );
+    let data = res.data.list;
+    setcalendar(
+      data.map((cal) => {
+        return {
+          date: new Date(cal.dt * 1000).getDate(),
+          temp: Math.round(cal.temp.day - 273.15),
+        };
+      })
+    );
+  };
+  useEffect(() => {
+    console.log(calendar);
+  }, [calendar]);
   const handleClick = () => {
     setOpen(!open);
   };
   const handleClickuth = () => {
-    setplace(locations[1].Placename);
-    data(locations[1].lat, locations[1].lon);
-  };
-  const handleClicktir = () => {
     setplace(locations[2].Placename);
     data(locations[2].lat, locations[2].lon);
+    calender(locations[2].lat, locations[2].lon);
   };
-  const handleClickchen = () => {
+  const handleClicktir = () => {
     setplace(locations[3].Placename);
     data(locations[3].lat, locations[3].lon);
+    calender(locations[3].lat, locations[3].lon);
   };
-  const handleClickbang = () => {
+  const handleClickchen = () => {
     setplace(locations[4].Placename);
     data(locations[4].lat, locations[4].lon);
+    calender(locations[4].lat, locations[4].lon);
   };
-  const handleClickhyd = () => {
+  const handleClickbang = () => {
     setplace(locations[5].Placename);
     data(locations[5].lat, locations[5].lon);
+    calender(locations[5].lat, locations[5].lon);
   };
-  const handleClickmum = () => {
+  const handleClickhyd = () => {
     setplace(locations[6].Placename);
     data(locations[6].lat, locations[6].lon);
+    calender(locations[6].lat, locations[6].lon);
   };
-  const handleClickdel = () => {
+  const handleClickmum = () => {
     setplace(locations[7].Placename);
     data(locations[7].lat, locations[7].lon);
+    calender(locations[7].lat, locations[7].lon);
+  };
+  const handleClickdel = () => {
+    setplace(locations[8].Placename);
+    data(locations[8].lat, locations[8].lon);
+    calender(locations[8].lat, locations[8].lon);
   };
 
   return (
@@ -159,6 +185,32 @@ export default function Wetherapi() {
             {place}({Math.round(item)}°C)
           </Typography>
         </Card>
+      </Box>
+      <Box
+        sx={{
+          width: "40rem",
+          height: "auto",
+          bgcolor: "#f8fafb",
+          display: "flex",
+          flexWrap: "wrap",
+          margin: "auto",
+        }}
+      >
+        {calendar.map((data) => (
+          <Box
+            sx={{
+              width: "87.4px",
+              height: "7rem",
+              bgcolor: "lightblue",
+              border: "2px solid black",
+            }}
+          >
+            <Typography sx={{ marginTop: "18px" }}>{data.date}</Typography>
+            <Typography sx={{ marginTop: "18px" }}>
+              Temp:{data.temp}°C
+            </Typography>
+          </Box>
+        ))}
       </Box>
     </div>
   );

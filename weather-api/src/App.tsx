@@ -1,11 +1,13 @@
 import React from "react";
 import "./App.css";
-import AWSsecrets from "./components/AWSsecrets";
+import Wetherapi from "./components/currentweather/Wetherapi";
+// import { Displaycalendar } from "./components/calendar/Displaycalendar";
 
 function App() {
   return (
     <div className="App">
-      <AWSsecrets />
+      <Wetherapi />
+      {/* <Displaycalendar /> */}
     </div>
   );
 }
