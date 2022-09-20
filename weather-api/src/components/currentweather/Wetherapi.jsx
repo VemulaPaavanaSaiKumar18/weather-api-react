@@ -1,5 +1,6 @@
 import * as React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -7,7 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import PlaceIcon from "@mui/icons-material/Place";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
@@ -15,82 +16,37 @@ export default function Wetherapi() {
   const [open, setOpen] = useState(true);
   const [item, setitem] = useState(0);
   const [place, setplace] = useState("");
-  const [calendar, setcalendar] = useState([]);
 
-  const locations = [
-    { APIkey1: "ea6e72aba7d75fbbf6be2aedc208af98" },
-    { APIkey2: "b1b15e88fa797225412429c1c50c122a1" },
-    { Placename: "Uthukottai", lat: 13.3339, lon: 79.8927 },
-    { Placename: "Tiruvallur", lat: 13.1231, lon: 79.912 },
-    { Placename: "Chennai", lat: 13.0827, lon: 80.2707 },
-    { Placename: "Bangaluru", lat: 12.9716, lon: 77.5946 },
-    { Placename: "Hyderabad", lat: 17.385, lon: 78.4867 },
-    { Placename: "Mumbai", lat: 19.076, lon: 72.8777 },
-    { Placename: "Delhi", lat: 28.7041, lon: 77.1025 },
-  ];
-
+  const getlocation = {
+    APIkey1: "ea6e72aba7d75fbbf6be2aedc208af98",
+    APIkey2: "b1b15e88fa797225412429c1c50c122a1",
+    locations: {
+      Uthukottai: { lat: 13.3339, lon: 79.8927 },
+      Tiruvallur: { lat: 13.1231, lon: 79.912 },
+      Chennai: { lat: 13.0827, lon: 80.2707 },
+      Bangaluru: { lat: 12.9716, lon: 77.5946 },
+      Hyderabad: { lat: 17.385, lon: 78.4867 },
+      Mumbai: { lat: 19.076, lon: 72.8777 },
+      Delhi: { lat: 28.7041, lon: 77.1025 },
+    },
+  };
   const data = async (lat, lon) => {
     let res = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${locations[0].APIkey1}`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${getlocation.APIkey1}`
     );
     let kelvin = res.data.main.temp;
     let celsius = Math.round(kelvin - 273.15);
     setitem(celsius);
   };
-  const calender = async (lat, lon) => {
-    let res = await axios.get(
-      `https://pro.openweathermap.org/data/2.5/forecast/climate?lat=${lat}&lon=${lon}&appid=${locations[1].APIkey2}`
-    );
-    let data = res.data.list;
-    setcalendar(
-      data.map((cal) => {
-        return {
-          date: new Date(cal.dt * 1000).getDate(),
-          temp: Math.round(cal.temp.day - 273.15),
-        };
-      })
-    );
-  };
-  useEffect(() => {
-    console.log(calendar);
-  }, [calendar]);
   const handleClick = () => {
     setOpen(!open);
   };
-  const handleClickuth = () => {
-    setplace(locations[2].Placename);
-    data(locations[2].lat, locations[2].lon);
-    calender(locations[2].lat, locations[2].lon);
-  };
-  const handleClicktir = () => {
-    setplace(locations[3].Placename);
-    data(locations[3].lat, locations[3].lon);
-    calender(locations[3].lat, locations[3].lon);
-  };
-  const handleClickchen = () => {
-    setplace(locations[4].Placename);
-    data(locations[4].lat, locations[4].lon);
-    calender(locations[4].lat, locations[4].lon);
-  };
-  const handleClickbang = () => {
-    setplace(locations[5].Placename);
-    data(locations[5].lat, locations[5].lon);
-    calender(locations[5].lat, locations[5].lon);
-  };
-  const handleClickhyd = () => {
-    setplace(locations[6].Placename);
-    data(locations[6].lat, locations[6].lon);
-    calender(locations[6].lat, locations[6].lon);
-  };
-  const handleClickmum = () => {
-    setplace(locations[7].Placename);
-    data(locations[7].lat, locations[7].lon);
-    calender(locations[7].lat, locations[7].lon);
-  };
-  const handleClickdel = () => {
-    setplace(locations[8].Placename);
-    data(locations[8].lat, locations[8].lon);
-    calender(locations[8].lat, locations[8].lon);
+  const handleClicks = (event) => {
+    let location = event.target.id;
+    setplace(location);
+    let lat = getlocation.locations[location]["lat"];
+    let lon = getlocation.locations[location]["lon"];
+    data(lat, lon);
   };
 
   return (
@@ -114,38 +70,58 @@ export default function Wetherapi() {
           </ListItemButton>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClickuth}>
-                <ListItemText primary="Uthukottai" />
+              <ListItemButton
+                id="Uthukottai"
+                sx={{ pl: 4 }}
+                onClick={handleClicks}
+              >
+                Uthukottai
               </ListItemButton>
             </List>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClicktir}>
-                <ListItemText primary="Tiruvallur" />
+              <ListItemButton
+                sx={{ pl: 4 }}
+                id="Tiruvallur"
+                onClick={handleClicks}
+              >
+                Tiruvallur
               </ListItemButton>
             </List>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClickchen}>
-                <ListItemText primary="Chennai" />
+              <ListItemButton
+                sx={{ pl: 4 }}
+                id="Chennai"
+                onClick={handleClicks}
+              >
+                Chennai
               </ListItemButton>
             </List>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClickbang}>
-                <ListItemText primary="Bangaluru" />
+              <ListItemButton
+                sx={{ pl: 4 }}
+                id="Bangaluru"
+                onClick={handleClicks}
+              >
+                Bangaluru
               </ListItemButton>
             </List>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClickhyd}>
-                <ListItemText primary="Hyderabad" />
+              <ListItemButton
+                sx={{ pl: 4 }}
+                id="Hyderabad"
+                onClick={handleClicks}
+              >
+                Hyderabad
               </ListItemButton>
             </List>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClickmum}>
-                <ListItemText primary="Mumbai" />
+              <ListItemButton sx={{ pl: 4 }} id="Mumbai" onClick={handleClicks}>
+                Mumbai
               </ListItemButton>
             </List>
             <List component="div">
-              <ListItemButton sx={{ pl: 4 }} onClick={handleClickdel}>
-                <ListItemText primary="Delhi" />
+              <ListItemButton sx={{ pl: 4 }} id="Delhi" onClick={handleClicks}>
+                Delhi
               </ListItemButton>
             </List>
           </Collapse>
@@ -186,36 +162,21 @@ export default function Wetherapi() {
           </Typography>
         </Card>
       </Box>
-      <Box
-        sx={{
-          width: "40rem",
-          height: "auto",
-          bgcolor: "#f8fafb",
-          display: "flex",
-          flexWrap: "wrap",
-          margin: "auto",
+      <Link
+        to={`/Displaycalendar/${place}`}
+        style={{
+          border: "2px solid black",
+          backgroundColor: "lightblue",
+          color: "brown",
+          borderRadius: "10px",
+          textDecoration: "none",
+          fontWeight: 700,
+          padding: "10px 20px",
+          display: "inline-block",
         }}
       >
-        {calendar.map((data) => (
-          <Box
-            sx={{
-              width: "87.4px",
-              height: "7rem",
-              bgcolor: "lightblue",
-              border: "2px solid black",
-            }}
-          >
-            <Typography
-              sx={{ marginTop: "18px", color: "brown", fontSize: "30px" }}
-            >
-              {data.date}
-            </Typography>
-            <Typography sx={{ marginTop: "18px" }}>
-              Temp:{data.temp}°C
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+        WEATHER TEMP FOR NEXT 30 IN {data}
+      </Link>
     </div>
   );
 }
