@@ -3,24 +3,25 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
+import Wetherapi from "../currentweather/Wetherapi";
 
 export const Displaycalendar = () => {
   const params = useParams();
   const [calendars, setcalendars] = useState([]);
   const data = params.location;
-  const getlocation = {
-    APIkey1: "ea6e72aba7d75fbbf6be2aedc208af98",
-    APIkey2: "b1b15e88fa797225412429c1c50c122a1",
-    locations: {
-      Uthukottai: { lat: 13.3339, lon: 79.8927 },
-      Tiruvallur: { lat: 13.1231, lon: 79.912 },
-      Chennai: { lat: 13.0827, lon: 80.2707 },
-      Bangaluru: { lat: 12.9716, lon: 77.5946 },
-      Hyderabad: { lat: 17.385, lon: 78.4867 },
-      Mumbai: { lat: 19.076, lon: 72.8777 },
-      Delhi: { lat: 28.7041, lon: 77.1025 },
-    },
-  };
+  // const getlocation = {
+  //   APIkey1: "ea6e72aba7d75fbbf6be2aedc208af98",
+  //   APIkey2: "b1b15e88fa797225412429c1c50c122a1",
+  //   locations: {
+  //     Uthukottai: { lat: 13.3339, lon: 79.8927 },
+  //     Tiruvallur: { lat: 13.1231, lon: 79.912 },
+  //     Chennai: { lat: 13.0827, lon: 80.2707 },
+  //     Bangaluru: { lat: 12.9716, lon: 77.5946 },
+  //     Hyderabad: { lat: 17.385, lon: 78.4867 },
+  //     Mumbai: { lat: 19.076, lon: 72.8777 },
+  //     Delhi: { lat: 28.7041, lon: 77.1025 },
+  //   },
+  // };
   const calendar = async (lat, lon) => {
     let res = await axios.get(
       `https://pro.openweathermap.org/data/2.5/forecast/climate?lat=${lat}&lon=${lon}&appid=b1b15e88fa797225412429c1c50c122a1`
@@ -35,14 +36,15 @@ export const Displaycalendar = () => {
       })
     );
   };
-  const handleClicks = () => {
-    let lat = getlocation.locations[data]["lat"];
-    let lon = getlocation.locations[data]["lon"];
-    calendar(lat, lon);
-  };
-  handleClicks();
+  // const handleClicks = () => {
+  //   let lat = getlocation.locations[data]["lat"];
+  //   let lon = getlocation.locations[data]["lon"];
+  //   calendar(lat, lon);
+  // };
+  // handleClicks();
   return (
     <div>
+      <Wetherapi calendar={calendar} />
       <Box sx={{ width: "40rem", marginLeft: "27.5rem" }}>
         <Typography
           sx={{

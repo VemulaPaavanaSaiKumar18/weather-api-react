@@ -12,7 +12,8 @@ import { useState } from "react";
 import { Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
-export default function Wetherapi() {
+export default function Wetherapi(props) {
+  console.log(props);
   const [open, setOpen] = useState(true);
   const [item, setitem] = useState(0);
   const [place, setplace] = useState("");
@@ -47,6 +48,7 @@ export default function Wetherapi() {
     let lat = getlocation.locations[location]["lat"];
     let lon = getlocation.locations[location]["lon"];
     data(lat, lon);
+    props.calendar(lat, lon);
   };
 
   return (
@@ -175,7 +177,7 @@ export default function Wetherapi() {
           display: "inline-block",
         }}
       >
-        WEATHER TEMP FOR NEXT 30 IN {data}
+        WEATHER TEMP FOR NEXT 30 DAYS
       </Link>
     </div>
   );
